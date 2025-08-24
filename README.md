@@ -16,7 +16,7 @@ This is a simple WebSocket-based chat server written in Go. Each client connects
 3. Install dependencies:
    ```bash
    go mod tidy
-  ````
+  ```
 
 4. Run the server:
 
