@@ -14,13 +14,14 @@ This is a simple WebSocket-based chat server written in Go. Each client connects
 1. Install Go (1.20+ recommended)  
 2. Clone or copy the project code  
 3. Install dependencies:
-   ```bash
+   
+   ```
    go mod tidy
-  ```
+   ```
 
 4. Run the server:
 
-   ```bash
+   ```
    go run main.go
    ```
 5. The server will start on port `8001`:
@@ -33,7 +34,7 @@ This is a simple WebSocket-based chat server written in Go. Each client connects
 
 * Using [websocat](https://github.com/vi/websocat):
 
-  ```bash
+  ```
   websocat ws://localhost:8001/v1/ws?username=alice
   websocat ws://localhost:8001/v1/ws?username=bob
   ```
