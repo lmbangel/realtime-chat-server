@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -8,6 +9,11 @@ import (
 
 	"github.com/coder/websocket"
 )
+
+type Message struct {
+	Message string `json:"message"`
+	Target  string `json:"target"`
+}
 
 type Client struct {
 	Username string `json:"username"`
@@ -54,11 +60,22 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		}
 
 		Connects.mu.Lock()
+		var Msg Message
+
+		if err := json.Unmarshal(msg, &Msg); err != nil {
+			Connects.clients[conn].Conn.Write(ctx, msgType, fmt.Appendf([]byte(""), "%s: %s", "Message not sent", "Invalid format"))
+			continue
+		}
 		for _, client := range Connects.clients {
 			if client.Conn == conn {
 				continue
 			}
-			if err := client.Conn.Write(ctx, msgType, fmt.Appendf([]byte(""), "%s: %s", username, msg)); err != nil {
+
+			if Msg.Target != "" && Msg.Target != client.Username {
+				continue
+			}
+
+			if err := client.Conn.Write(ctx, msgType, fmt.Appendf([]byte(""), "%s: %s", username, Msg.Message)); err != nil {
 				fmt.Printf("Error Writing Message: %s", err)
 				break
 			}
